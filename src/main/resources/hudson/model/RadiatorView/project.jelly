@@ -41,10 +41,12 @@
 		<j:invoke var="unbuiltJobs" on="${job}" method="getUnbuiltJobs" />
 		<j:invoke var="claimedJobs" on="${job}" method="getClaimedBuilds" />
 		<j:if test="${!failJobs.isEmpty()}">
+			<!--
 			<j:if
 				test="${job.getCulprit() != null &amp;&amp; !job.getCulprit().equals(&quot;&quot;) &amp;&amp; job.getCulprit() != &quot; - &quot;}">
 				<p>Possible Culprits: ${job.culprit}</p>
 			</j:if>
+			-->
 			<p>
 				Unclaimed Failures:
 				<ul>

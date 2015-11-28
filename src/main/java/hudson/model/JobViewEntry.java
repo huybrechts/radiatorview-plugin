@@ -1,9 +1,12 @@
 package hudson.model;
 
 import hudson.Functions;
-import hudson.matrix.MatrixRun;
 import hudson.matrix.MatrixBuild;
-import hudson.tasks.test.AbstractTestResultAction;
+import hudson.matrix.MatrixRun;
+import hudson.plugins.claim.ClaimTestAction;
+import hudson.tasks.junit.CaseResult;
+import hudson.tasks.junit.TestResultAction;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -12,8 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Represents a job to be shown in a view. Based heavily on the XFPanelEntry in
@@ -103,9 +104,9 @@ public class JobViewEntry implements IViewEntry {
 		if (getStable()) {
 			return "successful";
 		}
-		if (isCompletelyClaimed()) {
-			return "claimed";
-		}
+//		if (isCompletelyClaimed()) {
+//			return "claimed";
+//		}
 		if (getBroken()) {
 			return "failing";
 		}
@@ -145,7 +146,7 @@ public class JobViewEntry implements IViewEntry {
 	 * @see hudson.model.IViewEntry#getUrl()
 	 */
 	public String getUrl() {
-		return this.job.getUrl();
+		return this.job.getLastCompletedBuild().getUrl();
 	}
 
 	public String getLastBuildUrl() {
@@ -186,8 +187,7 @@ public class JobViewEntry implements IViewEntry {
 	public int getTestCount() {
 		Run<?, ?> run = this.job.getLastSuccessfulBuild();
 		if (run != null) {
-			AbstractTestResultAction<?> tests = run
-					.getAction(AbstractTestResultAction.class);
+			TestResultAction tests = run.getAction(TestResultAction.class);
 			return tests != null ? tests.getTotalCount() : 0;
 		}
 		return 0;
@@ -201,8 +201,7 @@ public class JobViewEntry implements IViewEntry {
 	public int getFailCount() {
 		Run<?, ?> run = this.job.getLastSuccessfulBuild();
 		if (run != null) {
-			AbstractTestResultAction<?> tests = run
-					.getAction(AbstractTestResultAction.class);
+			TestResultAction tests = run.getAction(TestResultAction.class);
 			return tests != null ? tests.getFailCount() : 0;
 		}
 		return 0;
@@ -227,10 +226,10 @@ public class JobViewEntry implements IViewEntry {
 		if (run != null) {
 			Run<?, ?> previous = this.getLastSuccessfulFrom(run);
 			if (previous != null) {
-				AbstractTestResultAction<?> tests = run
-						.getAction(AbstractTestResultAction.class);
-				AbstractTestResultAction<?> prevTests = previous
-						.getAction(AbstractTestResultAction.class);
+				TestResultAction tests = run
+						.getAction(TestResultAction.class);
+				TestResultAction prevTests = previous
+						.getAction(TestResultAction.class);
 				if (tests != null && prevTests != null) {
 					int currentSuccess = tests.getTotalCount()
 							- tests.getFailCount();
@@ -426,7 +425,7 @@ public class JobViewEntry implements IViewEntry {
 			return null;
 		}
 		// find the claim
-		String claim = "";
+		String claim = NOT_CLAIMED;
 		if (lastBuild instanceof hudson.matrix.MatrixBuild) {
 			MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
 			claim = buildMatrixClaimString(matrixBuild, true);
@@ -442,7 +441,18 @@ public class JobViewEntry implements IViewEntry {
 				sb.append(").");
 				claim = sb.toString();
 			} else {
-				claim = NOT_CLAIMED;
+				if (lastBuild.getResult() == Result.UNSTABLE && radiatorView.isClaimBuildIfAllTestsClaimed()) {
+					TestResultAction tests = lastBuild.getAction(TestResultAction.class);
+					boolean allTestsClaimed = true;
+					for (CaseResult cr : tests.getFailedTests()) {
+						ClaimTestAction cta = cr.getTestAction(ClaimTestAction.class);
+						if (cta == null || !cta.isClaimed()) {
+							allTestsClaimed = false;
+							break;
+						}
+					}
+					if (allTestsClaimed) claim = "All " + tests.getFailedTests().size() + " test failures claimed.";
+				}
 			}
 		}
 		return claim;

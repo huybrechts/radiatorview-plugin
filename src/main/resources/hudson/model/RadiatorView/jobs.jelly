@@ -44,7 +44,7 @@
 		<j:set var="top" value="1" />
 		<j:set var="showDetail" value="true" />
 		<j:forEach var="row" items="${failJobRows}">
-			<j:set var="width" value="${(100 / row.size())}" />
+			<j:set var="width" value="${(80 / row.size())}" />
 			<j:set var="left" value="0" />
 			<j:forEach var="job" items="${row}">
 				<j:set var="jobStyle"
@@ -79,6 +79,21 @@
 			</j:forEach>
 			<j:set var="top" value="${top + height}" />
 		</j:forEach>
+	</j:if>
+
+	<!-- Show claimed builds in the right hand column.  -->
+	<j:if test="${!contents.getClaimedBuilds().isEmpty()}">
+		<div
+				style="top:0%; right:0%; height:100%; width:20%; padding:0; margin:0; border:0; overflow-y:scroll"
+				id="job">
+			<h1 style="color:white">Claimed Builds:</h1>
+			<j:set var="jobFont" value="medium" />
+			<j:forEach var="job" items="${contents.getClaimedBuilds()}">
+				<j:set var="jobStyle"
+					   value="float:bottom; position:static; width: 95%; margin: 2.5%; " />
+				<st:include page="job.jelly" />
+			</j:forEach>
+		</div>
 	</j:if>
 
 </j:jelly>

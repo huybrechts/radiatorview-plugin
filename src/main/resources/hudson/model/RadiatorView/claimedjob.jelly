@@ -1,6 +1,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-	xmlns:i="jelly:fmt">
+		 xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+		 xmlns:i="jelly:fmt">
 	<!--  Display details about a single job in the radiator -->
 
 	<!-- show in a different style if the job is building or queued.  -->
@@ -9,17 +9,17 @@
 		<j:set var="clazz" value="building" />
 	</j:if>
 	<div style="${jobStyle}  background-color:${job.backgroundColor};"
-		class="job ${job.getStatus()} ${clazz}" tooltip="${job.name}" id="job">
+		 class="job ${job.getStatus()} ${clazz}" tooltip="${job.name}" id="job">
 
 		<!--  Job Name Title -->
 		<p>
 			<a style="color: ${job.color}; font-size: ${jobFont}; font-weight:bold;"
-				href="${rootURL}/${job.url}">${job.name}</a>
+			   href="${rootURL}/${job.lastBuildUrl}">${job.name}</a>
 		</p>
 		<!--  Build health icon -->
 		<j:if test="${showBuildStability}">
 			<img src="${rootURL}/images/${iconSize}/${job.job.buildHealth.iconUrl}"
-				alt="${job.job.buildHealth.description}" style="float:right" />
+				 alt="${job.job.buildHealth.description}" style="float:right" />
 		</j:if>
 		<!-- Job Claim Information -->
 		<j:if test="${job.isClaimed()}">
@@ -28,21 +28,21 @@
 		<!-- Details of any test failures -->
 		<p>
 			<j:if test="${job.broken == false}">
-                <a href="${rootURL}/${job.url}/testReport">
-				<j:if test="${job.failCount == 1}">
-					<font
-						style="text-align=center; color: #000000; font-size: ${failFont}; font-weight:bold;">1/${job.testCount} test failure</font>
-				</j:if>
-				<j:if test="${ job.failCount > 1}">
-					<font
-						style="text-align=center; color: #000000; font-size: ${failFont}; font-weight:bold;">${job.failCount}/${job.testCount} test failures</font>
-				</j:if>
-				<j:if test="${job.diff != ''}">
-					(
-					${job.diff}
-					tests
-					)
-				</j:if>
+				<a href="${rootURL}/${job.lastBuildUrl}/testReport">
+					<j:if test="${job.failCount == 1}">
+						<font
+								style="text-align=center; color: #000000; font-size: ${failFont}; font-weight:bold;">1/${job.testCount} test failure</font>
+					</j:if>
+					<j:if test="${ job.failCount > 1}">
+						<font
+								style="text-align=center; color: #000000; font-size: ${failFont}; font-weight:bold;">${job.failCount}/${job.testCount} test failures</font>
+					</j:if>
+					<j:if test="${job.diff != ''}">
+						(
+						<font color="${job.diffColor}">${job.diff}</font>
+						tests
+						)
+					</j:if>
 				</a>
 			</j:if>
 		</p>
@@ -55,11 +55,11 @@
 			<p>Build pending (#${job.queueNumber} in queue)</p>
 		</j:if>
 		<j:if test="${!job.getStable()}">
-			<!--
+<!--
 			<j:if test="${job.getCulprit() != &quot; - &quot;}">
 				<p>Possible culprit: ${job.culprit}</p>
 			</j:if>
-			-->
+-->
 			<j:if test="${job.getLastStableBuild() != null}">
 				<p>
 					Last Stable Build:
@@ -67,7 +67,6 @@
 				</p>
 			</j:if>
 		</j:if>
-		<br />
 	</div>
 
 </j:jelly>

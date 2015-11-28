@@ -4,7 +4,6 @@
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
 		<version>1.509.4</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>radiatorviewplugin</artifactId>
@@ -59,7 +58,7 @@
 			<version>1.7</version>
 			<optional>true</optional>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
     <pluginRepositories>
         <pluginRepository>

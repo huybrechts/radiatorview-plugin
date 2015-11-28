@@ -132,63 +132,19 @@
 		}
 
 		.failing {
-		background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.19, rgb(193,63,63)),
-		color-stop(0.6, rgb(235,26,36))
-		);
-		background-image: -moz-linear-gradient(
-		center bottom,
-		rgb(193,63,63) 19%,
-		rgb(235,26,36) 60%
-		);
+		background: rgb(193,63,63);
 		}
 
 		.successful {
-		background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.05, rgb(64,122,75)),
-		color-stop(0.53, rgb(0,138,44))
-		);
-		background-image: -moz-linear-gradient(
-		center bottom,
-		rgb(64,122,75) 5%,
-		rgb(0,138,44) 53%
-		);
+		background: green;
 		}
 
 		.claimed {
-		background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.25, rgb(196,172,53)),
-		color-stop(0.82, rgb(240,172,0))
-		);
-		background-image: -moz-linear-gradient(
-		center bottom,
-		rgb(196,172,53) 25%,
-		rgb(240,172,0) 82%
-		);
+		background: rgb(240,172,0);
 		}
 
 		.unstable {
-		background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.6, rgb(224,224,0)),
-		color-stop(0.9, yellow)
-		);
-		background-image: -moz-linear-gradient(
-		center bottom,
-		rgb(224,224,0) 60%,
-		yellow 90%
-		);
+		background: rgb(224,224,0);
 		}
 		
 		.dashboard {

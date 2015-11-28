@@ -41,6 +41,11 @@
 	<f:entry title="${%Use Dark Background?}" field="highVis" help="/plugin/radiatorviewplugin/help/highVis.html">
 		<f:checkbox name="highVis" checked="${it.highVis}" value="true" field="highVis" />
 	</f:entry>
+
+	<f:entry title="${%Consider the build claimed if all tests are claimed and the build did not fail}" field="claimBuildIfAllTestsClaimed">
+	    <f:checkbox name="claimBuildIfAllTestsClaimed" value="true"/>
+	</f:entry>
+
 	
 	
 	<f:entry title="${%Show as Projects?}" field="groupByPrefix" help="/plugin/radiatorviewplugin/help/groupByPrefix.html">
@@ -50,5 +55,5 @@
 	<f:entry title="${%Show build stability?}" field="showBuildStability" help="/plugin/radiatorviewplugin/help/showbuildStability.html">
 		<f:checkbox name="showBuildStability" checked="${it.showBuildStability}" value="true" field="showBuildStability" />
 	</f:entry>
-	
+
 </j:jelly>

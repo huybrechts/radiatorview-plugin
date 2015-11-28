@@ -59,6 +59,8 @@ public class RadiatorView extends ListView {
 	 */
 	 Boolean showStableDetail = false;
 
+	 private Boolean claimBuildIfAllTestsClaimed;
+
 	/**
 	 * User configuration - show build stability icon.
 	 */
@@ -106,7 +108,7 @@ public class RadiatorView extends ListView {
 	@DataBoundConstructor
 	public RadiatorView(String name, Boolean showStable,
 			Boolean showStableDetail, Boolean highVis, Boolean groupByPrefix,
-			Boolean showBuildStability, String captionText, Integer captionSize) {
+			Boolean showBuildStability, String captionText, Integer captionSize, Boolean claimBuildIfAllTestsClaimed) {
 		super(name);
 		this.showStable = showStable;
 		this.showStableDetail = showStableDetail;
@@ -115,6 +117,7 @@ public class RadiatorView extends ListView {
 		this.showBuildStability = showBuildStability;
 		this.captionText = captionText;
 		this.captionSize = captionSize;
+		this.claimBuildIfAllTestsClaimed = claimBuildIfAllTestsClaimed;
 	}
 	
 	public RadiatorView(String name)
@@ -135,12 +138,13 @@ public class RadiatorView extends ListView {
 	public ProjectViewEntry getContents() {
 		ProjectViewEntry contents = new ProjectViewEntry();
 
-		placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
+		HashMap<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
 		int j = 1;
 		for (hudson.model.Queue.Item i : Hudson.getInstance().getQueue()
 				.getItems()) {
 			placeInQueue.put(i, j++);
 		}
+		this.placeInQueue = placeInQueue;
 
 		for (TopLevelItem item : super.getItems()) {
 			if (item instanceof AbstractProject) {
@@ -176,7 +180,11 @@ public class RadiatorView extends ListView {
 		return contents;
 	}
 
-	private String getPrefix(String name) 
+	public boolean isClaimBuildIfAllTestsClaimed() {
+		return claimBuildIfAllTestsClaimed != null && claimBuildIfAllTestsClaimed;
+	}
+
+	private String getPrefix(String name)
 	{
 		if (name.contains("_"))
 		{
@@ -212,6 +220,7 @@ public class RadiatorView extends ListView {
 		this.showStableDetail = Boolean.parseBoolean(req
 				.getParameter("showStableDetail"));
 		this.highVis = Boolean.parseBoolean(req.getParameter("highVis"));
+		this.claimBuildIfAllTestsClaimed = Boolean.parseBoolean(req.getParameter("claimBuildIfAllTestsClaimed"));
 		this.groupByPrefix = Boolean.parseBoolean(req.getParameter("groupByPrefix"));
 		this.showBuildStability = Boolean.parseBoolean(req.getParameter("showBuildStability"));
 		this.captionText = req.getParameter("captionText");
@@ -234,7 +243,7 @@ public class RadiatorView extends ListView {
 	public Boolean getHighVis() {
 		return highVis;
 	}
-	
+
 	public Boolean getGroupByPrefix()
 	{
 		return groupByPrefix;

@@ -62,10 +62,10 @@ public class ProjectViewEntry implements IViewEntry {
 		computePassingAndFailingJobs();
 
 		if (failing.size() > 0) {
-			TreeSet<IViewEntry> aggregate = new TreeSet<IViewEntry>(
-					new EntryComparator());
+			TreeSet<IViewEntry> aggregate = new TreeSet<IViewEntry>(new EntryComparator());
 			aggregate.addAll(unstable);
 			aggregate.addAll(completelyPassing);
+			aggregate.removeAll(getClaimedBuilds());
 			return aggregate;
 		}
 		return completelyPassing;
@@ -83,10 +83,16 @@ public class ProjectViewEntry implements IViewEntry {
 	public TreeSet<IViewEntry> getFailingJobs() {
 		computePassingAndFailingJobs();
 
+		TreeSet<IViewEntry> aggregate = new TreeSet<IViewEntry>(new EntryComparator());
 		if (failing.size() > 0) {
-			return failing;
+			aggregate.addAll(failing);
+		} else {
+			aggregate.addAll(unstable);
 		}
-		return unstable;
+
+		aggregate.removeAll(getClaimedBuilds());
+
+		return aggregate;
 	}
 
 	/**
